@@ -96,7 +96,6 @@ func main() {
 
 	// Build auth middleware using activity-hub-auth SDK
 	authMiddleware := authlib.Middleware(identityDB)
-	sseMiddleware := authlib.SSEMiddleware(identityDB)
 
 	// Create router
 	r := mux.NewRouter()
@@ -104,8 +103,8 @@ func main() {
 	// Public endpoints
 	r.HandleFunc("/api/config", GetConfig).Methods("GET")
 
-	// SSE endpoint (uses query-param auth)
-	r.Handle("/api/game/{gameId}/stream", sseMiddleware(http.HandlerFunc(StreamGame(redisClient)))).Methods("GET")
+	// SSE endpoint (handles query-param auth internally)
+	r.HandleFunc("/api/game/{gameId}/stream", StreamGame(redisClient, identityDB)).Methods("GET")
 
 	// Authenticated endpoints
 	r.Handle("/api/game", authMiddleware(http.HandlerFunc(CreateGame(db, redisClient)))).Methods("POST")

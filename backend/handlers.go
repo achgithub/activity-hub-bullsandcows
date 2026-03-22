@@ -292,16 +292,27 @@ func GetGame(db *sql.DB) http.HandlerFunc {
 }
 
 // StreamGame handles SSE connections for game updates
-func StreamGame(redisClient *redis.Client) http.HandlerFunc {
+func StreamGame(redisClient *redis.Client, identityDB *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		user, ok := authlib.GetUserFromContext(r.Context())
-		if !ok {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		vars := mux.Vars(r)
+		gameID := vars["gameId"]
+
+		// Extract token from query parameter (EventSource limitation)
+		token := r.URL.Query().Get("token")
+		if token == "" {
+			http.Error(w, "Missing token", http.StatusUnauthorized)
 			return
 		}
 
-		vars := mux.Vars(r)
-		gameID := vars["gameId"]
+		// Validate token using activity-hub-auth
+		user, err := authlib.ResolveToken(identityDB, token)
+		if err != nil {
+			log.Printf("❌ SSE: Token validation failed: %v", err)
+			http.Error(w, "Invalid token", http.StatusUnauthorized)
+			return
+		}
+
+		log.Printf("📡 SSE connection attempt: game=%s, user=%s", gameID, user.Email)
 
 		StreamGameUpdates(w, r, gameID, user.Email, redisClient)
 	}
