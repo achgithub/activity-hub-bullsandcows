@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface Guess {
   id: number;
@@ -12,15 +12,11 @@ interface Guess {
 }
 
 interface SoloPlayerBoardProps {
-  gameId: string;
-  token: string;
-  userId: string;
   mode: string;
   secretCode?: string;
   guesses: Guess[];
   maxGuesses: number;
   status: string;
-  winner?: string;
   onSubmitGuess: (guess: string) => Promise<void>;
 }
 
@@ -36,15 +32,11 @@ const COLORS = [
 const NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 export default function SoloPlayerBoard({
-  gameId,
-  token,
-  userId,
   mode,
   secretCode,
   guesses,
   maxGuesses,
   status,
-  winner,
   onSubmitGuess,
 }: SoloPlayerBoardProps) {
   const codeLength = mode === 'colors' ? 4 : 5;
@@ -127,15 +119,6 @@ export default function SoloPlayerBoard({
         className={`${isSmall ? 'bc-history-peg' : 'bc-peg'} ${mode === 'colors' && option ? 'color-mode ' + option.colorClass : ''}`}
       >
         {mode === 'numbers' ? value : ''}
-      </div>
-    );
-  };
-
-  const renderFeedback = (bulls: number, cows: number) => {
-    return (
-      <div className="bc-feedback">
-        <span className="bc-badge bc-badge--bulls">{bulls} ✓</span>
-        <span className="bc-badge bc-badge--cows">{cows} ~</span>
       </div>
     );
   };

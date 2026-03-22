@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { AppHeader, GameCard } from 'activity-hub-sdk';
+import { useState, useEffect, useCallback } from 'react';
+import { AppHeader } from 'activity-hub-sdk';
 import { useGameSocket, SSEEvent } from '../hooks/useGameSocket';
 import CodeSettingPhase from './CodeSettingPhase';
 import TwoPlayerBoard from './TwoPlayerBoard';

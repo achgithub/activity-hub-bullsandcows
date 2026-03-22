@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { AppHeader, GameCard } from 'activity-hub-sdk';
 import GameBoard from './components/GameBoard';
 

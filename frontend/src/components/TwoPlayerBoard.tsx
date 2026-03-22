@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Guess {
   id: number;
@@ -12,8 +12,6 @@ interface Guess {
 }
 
 interface TwoPlayerBoardProps {
-  gameId: string;
-  token: string;
   userId: string;
   mode: string;
   myCode: string;
@@ -23,7 +21,6 @@ interface TwoPlayerBoardProps {
   maxGuesses: number;
   status: string;
   winner?: string;
-  waitingForOpponent: boolean;
   onSubmitGuess: (guess: string) => Promise<void>;
 }
 
@@ -39,8 +36,6 @@ const COLORS = [
 const NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 export default function TwoPlayerBoard({
-  gameId,
-  token,
   userId,
   mode,
   myCode,
@@ -50,7 +45,6 @@ export default function TwoPlayerBoard({
   maxGuesses,
   status,
   winner,
-  waitingForOpponent,
   onSubmitGuess,
 }: TwoPlayerBoardProps) {
   const codeLength = mode === 'colors' ? 4 : 5;
@@ -126,7 +120,7 @@ export default function TwoPlayerBoard({
   };
 
   // Reset submitted state when turn changes
-  React.useEffect(() => {
+  useEffect(() => {
     setSubmittedThisTurn(false);
   }, [currentTurn]);
 
