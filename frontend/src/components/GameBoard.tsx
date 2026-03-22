@@ -57,8 +57,8 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
 
   const fetchGame = useCallback(async () => {
     try {
-      // Use relative URL - Activity Hub proxies to Unix socket
-      const response = await fetch(`api/game/${gameId}`, {
+      // Use absolute URL with proxy path
+      const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'X-User-ID': userId,
@@ -113,7 +113,7 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   }, [fetchGame]);
 
   const handleSoloGuess = async (guess: string) => {
-    const response = await fetch(`api/game/${gameId}/guess`, {
+    const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}/guess`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -133,7 +133,7 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   };
 
   const handleTwoPlayerGuess = async (guess: string) => {
-    const response = await fetch(`api/game/${gameId}/guess`, {
+    const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}/guess`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

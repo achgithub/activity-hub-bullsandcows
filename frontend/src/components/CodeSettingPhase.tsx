@@ -90,7 +90,7 @@ export default function CodeSettingPhase({
     setError(null);
 
     try {
-      const response = await fetch(`api/game/${gameId}/set-code`, {
+      const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}/set-code`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
