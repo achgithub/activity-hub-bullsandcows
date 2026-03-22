@@ -31,8 +31,8 @@ export function useGameSocket(
       eventSourceRef.current.close();
     }
 
-    // Use relative URL - Activity Hub proxies to Unix socket
-    const url = `api/game/${gameId}/stream?token=${encodeURIComponent(token)}`;
+    // Use absolute URL for SSE to avoid base path issues
+    const url = `/api/apps/bulls-and-cows/proxy/api/game/${gameId}/stream?token=${encodeURIComponent(token)}`;
 
     console.log('[SSE] Connecting to:', url);
 
