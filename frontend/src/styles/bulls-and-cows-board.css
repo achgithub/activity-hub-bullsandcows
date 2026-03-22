@@ -1,0 +1,515 @@
+/* Bulls and Cows Game Board Styles
+ * ONLY game board rendering CSS allowed here per project standards
+ * All UI elements use Activity Hub CSS classes
+ */
+
+/* Game Info Bar (below header, above content) */
+.bc-game-info-bar {
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid #e7e5e4;
+  padding: 12px 16px;
+}
+
+.bc-game-info-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.bc-game-info-content .ah-badge {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+
+/* Section titles */
+.bc-section-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Waiting indicator inline in title */
+.bc-waiting-indicator {
+  font-size: 14px;
+  font-weight: 400;
+  color: #78716c;
+}
+
+/* Game over banner - bigger and centered */
+.bc-game-over-banner {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.bc-game-over-banner--win {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* Color definitions for game pieces - higher specificity to override default white */
+.bc-peg.bc-color-red, .bc-peg-compact.bc-color-red, .bc-history-peg.bc-color-red, .bc-code-peg.bc-color-red, .bc-option-btn.bc-color-red {
+  background-color: #dc3545 !important;
+}
+.bc-peg.bc-color-blue, .bc-peg-compact.bc-color-blue, .bc-history-peg.bc-color-blue, .bc-code-peg.bc-color-blue, .bc-option-btn.bc-color-blue {
+  background-color: #0d6efd !important;
+}
+.bc-peg.bc-color-green, .bc-peg-compact.bc-color-green, .bc-history-peg.bc-color-green, .bc-code-peg.bc-color-green, .bc-option-btn.bc-color-green {
+  background-color: #198754 !important;
+}
+.bc-peg.bc-color-yellow, .bc-peg-compact.bc-color-yellow, .bc-history-peg.bc-color-yellow, .bc-code-peg.bc-color-yellow, .bc-option-btn.bc-color-yellow {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+}
+.bc-peg.bc-color-orange, .bc-peg-compact.bc-color-orange, .bc-history-peg.bc-color-orange, .bc-code-peg.bc-color-orange, .bc-option-btn.bc-color-orange {
+  background-color: #fd7e14 !important;
+}
+.bc-peg.bc-color-purple, .bc-peg-compact.bc-color-purple, .bc-history-peg.bc-color-purple, .bc-code-peg.bc-color-purple, .bc-option-btn.bc-color-purple {
+  background-color: #6f42c1 !important;
+}
+
+/* Color button styling */
+.bc-color-btn.bc-color-red { background-color: #dc3545; }
+.bc-color-btn.bc-color-blue { background-color: #0d6efd; }
+.bc-color-btn.bc-color-green { background-color: #198754; }
+.bc-color-btn.bc-color-yellow { background-color: #ffc107; color: #212529; }
+.bc-color-btn.bc-color-orange { background-color: #fd7e14; }
+.bc-color-btn.bc-color-purple { background-color: #6f42c1; }
+
+/* Guess display grid */
+.bc-guess-display {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.bc-guess-display-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Secret code compact layout - code pegs + eye button in a row */
+.bc-secret-code-compact {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Individual peg/position */
+.bc-peg {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #fff;
+  color: #212529;
+}
+
+.bc-peg.selected {
+  border: 3px solid #0066cc;
+}
+
+.bc-peg-hidden {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: default;
+}
+
+.bc-peg-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.bc-peg-set {
+  cursor: default;
+  pointer-events: none;
+  border-color: #22c55e;
+}
+
+/* Compact peg for secret code section - smaller to save mobile space */
+.bc-peg-compact {
+  width: 48px;
+  height: 48px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  background-color: #fff;
+  color: #212529;
+}
+
+/* Eye button styled like a peg */
+.bc-eye-button {
+  width: 48px;
+  height: 48px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  background-color: #fff;
+  color: #212529;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.bc-eye-button:hover {
+  background-color: #f8f9fa;
+  border-color: #0066cc;
+}
+
+.bc-eye-button:active {
+  background-color: #e7e5e4;
+}
+
+.bc-peg.color-mode {
+  color: #fff;
+}
+
+/* Color selection buttons */
+.bc-color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.bc-color-btn {
+  padding: 0.75rem;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  min-height: 50px;
+}
+
+/* Number selection grid */
+.bc-number-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.bc-number-btn {
+  min-height: 48px;
+  font-size: 1.125rem;
+}
+
+/* Guess history - small pegs */
+.bc-history-pegs {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.bc-history-peg {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #dee2e6;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #fff;
+  color: #212529;
+}
+
+.bc-history-peg.color-mode {
+  color: #fff;
+}
+
+/* Feedback badges */
+.bc-feedback {
+  display: flex;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.bc-bulls-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  background-color: #d4edda;
+  color: #155724;
+  font-weight: bold;
+}
+
+.bc-cows-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  background-color: #fff3cd;
+  color: #856404;
+  font-weight: bold;
+}
+
+/* Connection status */
+.bc-status-connected {
+  color: #198754;
+}
+
+.bc-status-disconnected {
+  color: #dc3545;
+}
+
+/* Guess history item layout */
+.bc-history-item-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.bc-guess-number {
+  font-weight: bold;
+  min-width: 40px;
+}
+
+/* Action buttons layout */
+.bc-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bc-actions .ah-btn-primary {
+  flex: 1;
+}
+
+/* Game info grid */
+.bc-game-info {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Mode selection */
+.bc-mode-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.bc-mode-btn {
+  padding: 1.5rem;
+  font-size: 1.125rem;
+}
+
+.bc-mode-title {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.bc-mode-desc {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+/* Guess history scrollable container */
+.bc-history-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Legend text */
+.bc-legend {
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+/* Status indicator sizing */
+.bc-status {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+/* ===== NEW 2-PLAYER MODE STYLES ===== */
+
+/* Code pegs (unified style for code setting and gameplay) */
+.bc-code-peg {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #fff;
+  color: #212529;
+  transition: border-color 0.2s;
+}
+
+.bc-code-peg--selected {
+  border: 3px solid #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+}
+
+.bc-code-peg--hidden {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: default;
+}
+
+.bc-code-peg--sm {
+  width: 32px;
+  height: 32px;
+  font-size: 0.875rem;
+}
+
+.bc-code-peg.bc-color-red,
+.bc-code-peg.bc-color-blue,
+.bc-code-peg.bc-color-green,
+.bc-code-peg.bc-color-orange,
+.bc-code-peg.bc-color-purple {
+  color: #fff;
+}
+
+/* Code row layout */
+.bc-code-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.bc-code-row--sm .bc-code-peg {
+  width: 32px;
+  height: 32px;
+  font-size: 0.875rem;
+}
+
+/* Options grid (for selecting colors/numbers) */
+.bc-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 0.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.bc-option-btn {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.bc-option-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.bc-option-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.bc-option-btn--used {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Badges for bulls/cows feedback */
+.bc-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.bc-badge--bulls {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.bc-badge--cows {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Guess row layout */
+.bc-guess-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #e7e5e4;
+}
+
+.bc-guess-row:last-child {
+  border-bottom: none;
+}
+
+/* Privacy reveal button */
+.bc-reveal-btn {
+  font-size: 1.2rem;
+}
+
+/* Opponent progress summary - fixed height to prevent shifting */
+.bc-opponent-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 32px;
+}
+
+/* Compact opponent layout for mobile - text wraps, badges on right */
+.bc-opponent-compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 48px;
+}
+
+.bc-opponent-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #57534e;
+  line-height: 1.3;
+}
+
+.bc-opponent-feedback {
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
+/* Code peg placeholder (question mark) */
+.bc-code-peg-placeholder {
+  color: #ccc;
+}
