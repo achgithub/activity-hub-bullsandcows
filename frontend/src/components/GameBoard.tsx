@@ -54,7 +54,6 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [waitingForOpponent, setWaitingForOpponent] = useState(false);
 
   const fetchGame = useCallback(async () => {
     try {
@@ -97,14 +96,12 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
     } else if (event.type === 'both_codes_set') {
       // Both players set codes - game starting
       fetchGame();
-      setWaitingForOpponent(false);
     } else if (event.type === 'guess_submitted') {
       // One player submitted guess for current turn
-      setWaitingForOpponent(true);
+      // No-op: waiting state is managed in TwoPlayerBoard component
     } else if (event.type === 'turn_complete') {
       // Both players submitted - turn evaluated
       fetchGame();
-      setWaitingForOpponent(false);
     }
   }, [fetchGame]);
 
