@@ -152,12 +152,9 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
 
     if (data.bothGuessed) {
       // Both players guessed - wait for turn_complete event
-      setWaitingForOpponent(false);
       fetchGame();
-    } else {
-      // Waiting for opponent
-      setWaitingForOpponent(true);
     }
+    // Waiting state is managed in TwoPlayerBoard component
   };
 
   const renderHeader = () => <AppHeader title="Bulls and Cows" icon="🐂" />;
