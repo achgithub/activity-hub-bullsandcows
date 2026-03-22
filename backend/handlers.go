@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	authlib "github.com/achgithub/activity-hub-common/auth"
+	authlib "github.com/achgithub/activity-hub-auth"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"

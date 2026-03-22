@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/achgithub/activity-hub-auth"
+	authlib "github.com/achgithub/activity-hub-auth"
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -95,8 +95,8 @@ func main() {
 	log.Printf("✅ Connected to Redis at %s:%s", redisHost, redisPort)
 
 	// Build auth middleware using activity-hub-auth SDK
-	authMiddleware := auth.Middleware(identityDB)
-	sseMiddleware := auth.SSEMiddleware(identityDB)
+	authMiddleware := authlib.Middleware(identityDB)
+	sseMiddleware := authlib.SSEMiddleware(identityDB)
 
 	// Create router
 	r := mux.NewRouter()

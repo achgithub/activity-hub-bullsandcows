@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	authlib "github.com/achgithub/activity-hub-common/auth"
+	authlib "github.com/achgithub/activity-hub-auth"
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 )
