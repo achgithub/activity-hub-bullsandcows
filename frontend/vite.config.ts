@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/api/apps/bullsandcows/proxy/',
+  base: '/api/apps/bulls-and-cows/proxy/',
   build: {
     outDir: 'build',
   },
