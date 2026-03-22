@@ -35,36 +35,40 @@ func main() {
 		log.Fatalf("Failed to remove existing socket: %v", err)
 	}
 
-	// Get database host from environment or use default
-	dbHost := os.Getenv("DB_HOST")
-	if dbHost == "" {
-		dbHost = "localhost"
-	}
+	// Get database configuration from environment
+	dbHost := getEnv("DB_HOST", "localhost")
+	dbPort := getEnv("DB_PORT", "5432")
+	dbUser := getEnv("DB_USER", "postgres")
+	dbPass := getEnv("DB_PASS", "")
+	dbName := getEnv("DB_NAME", "bullsandcows")
+	identityDBName := getEnv("IDENTITY_DB_NAME", "activity_hub")
 
-	// Get Redis address from environment or use default
-	redisAddr := os.Getenv("REDIS_ADDR")
-	if redisAddr == "" {
-		redisAddr = "127.0.0.1:6379"
-	}
+	// Get Redis configuration
+	redisHost := getEnv("REDIS_HOST", "127.0.0.1")
+	redisPort := getEnv("REDIS_PORT", "6379")
+	redisPassword := getEnv("REDIS_PASSWORD", "")
 
 	// Initialize Bulls and Cows database connection
-	connStr := fmt.Sprintf("host=%s port=5555 user=activityhub password=pubgames dbname=bullsandcows sslmode=disable", dbHost)
 	var err error
-	db, err = sql.Open("postgres", connStr)
+	db, err = sql.Open("postgres", fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		dbHost, dbPort, dbUser, dbPass, dbName,
+	))
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Fatalf("Failed to connect to Bulls and Cows database: %v", err)
 	}
 	defer db.Close()
 
-	// Test database connection
 	if err := db.Ping(); err != nil {
-		log.Fatalf("Failed to ping database: %v", err)
+		log.Fatalf("Failed to ping Bulls and Cows database: %v", err)
 	}
-	log.Printf("✅ Connected to PostgreSQL database: bullsandcows")
+	log.Printf("✅ Connected to PostgreSQL database: %s", dbName)
 
 	// Connect to Activity Hub identity database for auth
-	identityConnStr := fmt.Sprintf("host=%s port=5555 user=activityhub password=pubgames dbname=activity_hub sslmode=disable", dbHost)
-	identityDB, err = sql.Open("postgres", identityConnStr)
+	identityDB, err = sql.Open("postgres", fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		dbHost, dbPort, dbUser, dbPass, identityDBName,
+	))
 	if err != nil {
 		log.Fatalf("Failed to connect to identity database: %v", err)
 	}
@@ -73,12 +77,12 @@ func main() {
 	if err := identityDB.Ping(); err != nil {
 		log.Fatalf("Failed to ping identity database: %v", err)
 	}
-	log.Printf("✅ Connected to identity database: activity_hub")
+	log.Printf("✅ Connected to identity database: %s", identityDBName)
 
 	// Initialize Redis client
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     redisAddr,
-		Password: "",
+		Addr:     fmt.Sprintf("%s:%s", redisHost, redisPort),
+		Password: redisPassword,
 		DB:       0,
 	})
 	defer redisClient.Close()
@@ -88,7 +92,7 @@ func main() {
 	if err := redisClient.Ping(ctx).Err(); err != nil {
 		log.Fatalf("Failed to connect to Redis: %v", err)
 	}
-	log.Printf("✅ Connected to Redis at %s", redisAddr)
+	log.Printf("✅ Connected to Redis at %s:%s", redisHost, redisPort)
 
 	// Build auth middleware using activity-hub-auth SDK
 	authMiddleware := auth.Middleware(identityDB)
@@ -148,4 +152,12 @@ func main() {
 	// Start server on Unix socket
 	log.Printf("🎯 Bulls and Cows server starting on Unix socket: %s", socketPath)
 	log.Fatal(http.Serve(listener, handler))
+}
+
+// getEnv retrieves an environment variable or returns a default value
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
 }
