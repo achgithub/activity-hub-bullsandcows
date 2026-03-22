@@ -15,6 +15,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// HandleHealth returns health status for the launcher
+func HandleHealth(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"status": "ok",
+		"app":    "bulls-and-cows",
+	})
+}
+
 // GetConfig returns app configuration for the identity shell
 func GetConfig(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

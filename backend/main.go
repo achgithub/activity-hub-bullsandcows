@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	authlib "github.com/achgithub/activity-hub-auth"
 	"github.com/go-redis/redis/v8"
@@ -101,6 +100,7 @@ func main() {
 	r := mux.NewRouter()
 
 	// Public endpoints
+	r.HandleFunc("/api/health", HandleHealth).Methods("GET")
 	r.HandleFunc("/api/config", GetConfig).Methods("GET")
 
 	// SSE endpoint (handles query-param auth internally)
@@ -113,17 +113,12 @@ func main() {
 	r.Handle("/api/game/{gameId}/guess", authMiddleware(http.HandlerFunc(MakeGuess(db, redisClient)))).Methods("POST")
 
 	// Serve static files (React build)
-	staticDir := "./static"
-	if _, err := os.Stat(staticDir); os.IsNotExist(err) {
-		log.Printf("Warning: Static directory not found at %s", staticDir)
+	staticPath := getEnv("STATIC_PATH", "./static")
+	if _, err := os.Stat(staticPath); os.IsNotExist(err) {
+		log.Printf("Warning: Static directory not found at %s", staticPath)
 	} else {
-		// Serve index.html for root
-		r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, filepath.Join(staticDir, "index.html"))
-		})
-
-		// Serve other static files
-		r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(staticDir))))
+		r.PathPrefix("/").Handler(http.FileServer(http.Dir(staticPath)))
+		log.Printf("📁 Serving static files from: %s", staticPath)
 	}
 
 	// Setup CORS
