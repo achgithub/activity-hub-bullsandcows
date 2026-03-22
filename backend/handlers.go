@@ -303,15 +303,20 @@ func GetGame(db *sql.DB) http.HandlerFunc {
 // StreamGame handles SSE connections for game updates
 func StreamGame(redisClient *redis.Client, identityDB *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("🔴 StreamGame handler called! Path: %s, URL: %s", r.URL.Path, r.URL.String())
+
 		vars := mux.Vars(r)
 		gameID := vars["gameId"]
+		log.Printf("🔴 Extracted gameID: %s", gameID)
 
 		// Extract token from query parameter (EventSource limitation)
 		token := r.URL.Query().Get("token")
 		if token == "" {
+			log.Printf("❌ SSE: Missing token in query params")
 			http.Error(w, "Missing token", http.StatusUnauthorized)
 			return
 		}
+		log.Printf("🔴 Token found: %s...", token[:20])
 
 		// Validate token using activity-hub-auth
 		user, err := authlib.ResolveToken(identityDB, token)
