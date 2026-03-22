@@ -50,7 +50,7 @@ interface GameBoardProps {
   userName: string;
 }
 
-export default function GameBoard({ gameId, token, userId, userName }: GameBoardProps) {
+export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -200,15 +200,11 @@ export default function GameBoard({ gameId, token, userId, userName }: GameBoard
       <>
         {renderHeader()}
         <SoloPlayerBoard
-          gameId={gameId}
-          token={token}
-          userId={userId}
           mode={game.mode}
           secretCode={game.secretCode}
           guesses={game.guesses}
           maxGuesses={game.maxGuesses}
           status={game.status}
-          winner={game.winner}
           onSubmitGuess={handleSoloGuess}
         />
       </>
@@ -246,8 +242,6 @@ export default function GameBoard({ gameId, token, userId, userName }: GameBoard
         <>
           {renderHeader()}
           <TwoPlayerBoard
-            gameId={gameId}
-            token={token}
             userId={userId}
             mode={game.mode}
             myCode={myCode}
@@ -257,7 +251,6 @@ export default function GameBoard({ gameId, token, userId, userName }: GameBoard
             maxGuesses={game.maxGuesses}
             status={game.status}
             winner={game.winner}
-            waitingForOpponent={waitingForOpponent}
             onSubmitGuess={handleTwoPlayerGuess}
           />
         </>
