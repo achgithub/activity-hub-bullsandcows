@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { AppHeader } from 'activity-hub-sdk';
 import { useGameSocket, SSEEvent } from '../hooks/useGameSocket';
 import CodeSettingPhase from './CodeSettingPhase';
 import TwoPlayerBoard from './TwoPlayerBoard';
@@ -157,33 +156,25 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
     // Waiting state is managed in TwoPlayerBoard component
   };
 
-  const renderHeader = () => <AppHeader title="Bulls and Cows" icon="🐂" />;
-
   if (loading) {
     return (
-      <>
-        {renderHeader()}
-        <div className="ah-container ah-container--narrow">
-          <div className="ah-card">
-            <p>Loading game...</p>
-          </div>
+      <div className="ah-container ah-container--narrow">
+        <div className="ah-card">
+          <p>Loading game...</p>
         </div>
-      </>
+      </div>
     );
   }
 
   if (error || !game) {
     return (
-      <>
-        {renderHeader()}
-        <div className="ah-container ah-container--narrow">
-          <div className="ah-card">
-            <div className="ah-banner ah-banner--error">
-              {error || 'Failed to load game'}
-            </div>
+      <div className="ah-container ah-container--narrow">
+        <div className="ah-card">
+          <div className="ah-banner ah-banner--error">
+            {error || 'Failed to load game'}
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
@@ -191,17 +182,14 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   if (game.variant === '1player') {
     // Solo play
     return (
-      <>
-        {renderHeader()}
-        <SoloPlayerBoard
-          mode={game.mode}
-          secretCode={game.secretCode}
-          guesses={game.guesses}
-          maxGuesses={game.maxGuesses}
-          status={game.status}
-          onSubmitGuess={handleSoloGuess}
-        />
-      </>
+      <SoloPlayerBoard
+        mode={game.mode}
+        secretCode={game.secretCode}
+        guesses={game.guesses}
+        maxGuesses={game.maxGuesses}
+        status={game.status}
+        onSubmitGuess={handleSoloGuess}
+      />
     );
   } else if (game.variant === '2player') {
     if (game.status === 'code_setting') {
@@ -211,18 +199,15 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
       const opponentCodeSet = isPlayer1 ? game.player2CodeSet || false : game.player1CodeSet || false;
 
       return (
-        <>
-          {renderHeader()}
-          <CodeSettingPhase
-            gameId={gameId}
-            token={token}
-            userId={userId}
-            mode={game.mode}
-            myCodeSet={myCodeSet}
-            opponentCodeSet={opponentCodeSet}
-            onCodeSet={fetchGame}
-          />
-        </>
+        <CodeSettingPhase
+          gameId={gameId}
+          token={token}
+          userId={userId}
+          mode={game.mode}
+          myCodeSet={myCodeSet}
+          opponentCodeSet={opponentCodeSet}
+          onCodeSet={fetchGame}
+        />
       );
     } else {
       // Active gameplay or game over
@@ -233,35 +218,29 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
       const opponentLastGuess = opponentGuesses.length > 0 ? opponentGuesses[opponentGuesses.length - 1] : null;
 
       return (
-        <>
-          {renderHeader()}
-          <TwoPlayerBoard
-            userId={userId}
-            mode={game.mode}
-            myCode={myCode}
-            opponentLastGuess={opponentLastGuess}
-            myGuesses={myGuesses}
-            currentTurn={game.currentTurn || 1}
-            maxGuesses={game.maxGuesses}
-            status={game.status}
-            winner={game.winner}
-            onSubmitGuess={handleTwoPlayerGuess}
-          />
-        </>
+        <TwoPlayerBoard
+          userId={userId}
+          mode={game.mode}
+          myCode={myCode}
+          opponentLastGuess={opponentLastGuess}
+          myGuesses={myGuesses}
+          currentTurn={game.currentTurn || 1}
+          maxGuesses={game.maxGuesses}
+          status={game.status}
+          winner={game.winner}
+          onSubmitGuess={handleTwoPlayerGuess}
+        />
       );
     }
   }
 
   return (
-    <>
-      {renderHeader()}
-      <div className="ah-container ah-container--narrow">
-        <div className="ah-card">
-          <div className="ah-banner ah-banner--error">
-            Unknown game variant: {game.variant}
-          </div>
+    <div className="ah-container ah-container--narrow">
+      <div className="ah-card">
+        <div className="ah-banner ah-banner--error">
+          Unknown game variant: {game.variant}
         </div>
       </div>
-    </>
+    </div>
   );
 }
