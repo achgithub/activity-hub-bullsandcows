@@ -164,9 +164,9 @@ export default function TwoPlayerBoard({
 
   return (
     <>
-      {/* Game Info Bar */}
-      <div className="bc-game-info-bar">
-        <div className="bc-game-info-content">
+      <div className="ah-container ah-container--narrow">
+        {/* Game Info Bar */}
+        <div className="ah-flex-center ah-mb">
           <div className="ah-badge">
             {mode === 'colors' ? 'Colors' : 'Numbers'}
           </div>
@@ -177,9 +177,6 @@ export default function TwoPlayerBoard({
             Turn {currentTurn}
           </div>
         </div>
-      </div>
-
-      <div className="ah-container ah-container--narrow ah-mt">
         {/* My Code (Privacy Toggle) - Compact for mobile */}
         <div className="ah-card ah-mb">
           <div className="bc-secret-code-compact">
@@ -206,11 +203,11 @@ export default function TwoPlayerBoard({
 
         {/* Opponent's Last Guess - Compact for mobile */}
         <div className="ah-card ah-mb">
-          <div className="bc-opponent-compact">
-            <div className="bc-opponent-label">
+          <div className="ah-flex-between">
+            <div className="ah-meta">
               Opponent's<br />last guess
             </div>
-            <div className="bc-opponent-feedback">
+            <div>
               {opponentLastGuess && renderFeedback(opponentLastGuess.bulls, opponentLastGuess.cows)}
             </div>
           </div>
@@ -219,9 +216,9 @@ export default function TwoPlayerBoard({
         {/* Current Guess Input */}
         {status === 'active' && (
           <div className="ah-card ah-mb">
-            <h3 className="bc-section-title">
+            <h3>
               Your Guess
-              {hasGuessedThisTurn && <span className="bc-waiting-indicator"> ⏳ waiting</span>}
+              {hasGuessedThisTurn && <span className="ah-meta"> ⏳ waiting</span>}
             </h3>
 
             <div className={`bc-guess-display ${hasGuessedThisTurn ? 'bc-guess-display-disabled' : ''}`}>
@@ -273,7 +270,10 @@ export default function TwoPlayerBoard({
               </div>
             )}
 
-            <div className="bc-actions ah-mt">
+            <div className="ah-flex-between ah-mt">
+              <button className="ah-btn-outline" onClick={handleClear} disabled={hasGuessedThisTurn}>
+                Clear
+              </button>
               <button
                 className="ah-btn-primary"
                 onClick={handleSubmit}
@@ -281,36 +281,31 @@ export default function TwoPlayerBoard({
               >
                 {submitting ? 'Submitting...' : 'Submit Guess'}
               </button>
-              <button className="ah-btn-outline" onClick={handleClear} disabled={hasGuessedThisTurn}>
-                Clear
-              </button>
             </div>
           </div>
         )}
 
         {/* Game over */}
         {status !== 'active' && status !== 'code_setting' && (
-          <div className="ah-card ah-mb">
-            <div className={`bc-game-over-banner ${status === 'won' && winner === userId ? 'bc-game-over-banner--win' : ''}`}>
-              {status === 'won' && winner === userId && '🎉 You won!'}
-              {status === 'won' && winner !== userId && '😞 Opponent won'}
-              {status === 'draw' && '🤝 Draw!'}
-            </div>
+          <div className={`ah-banner ${status === 'won' && winner === userId ? 'ah-banner--success' : 'ah-banner--error'} ah-mb`}>
+            {status === 'won' && winner === userId && '🎉 You won!'}
+            {status === 'won' && winner !== userId && '😞 Opponent won'}
+            {status === 'draw' && '🤝 Draw!'}
           </div>
         )}
 
         {/* Guess History - Below input */}
         <div className="ah-card">
-          <h3 className="bc-section-title">My Guess History</h3>
+          <h3>My Guess History</h3>
 
           {myGuesses.length === 0 ? (
             <p className="ah-meta">No guesses yet</p>
           ) : (
-            <div className="bc-history-scroll">
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
               {[...myGuesses].reverse().map((guess) => (
                 <div key={guess.id} className="ah-list-item ah-mb-sm">
-                  <div className="bc-history-item-content">
-                    <div className="bc-guess-number">#{guess.turnNumber}</div>
+                  <div className="ah-flex-center">
+                    <div className="ah-badge">#{guess.turnNumber}</div>
                     <div className="bc-history-pegs">
                       {guess.guessCode.split('').map((value, idx) => renderCodePeg(value, idx, true))}
                     </div>

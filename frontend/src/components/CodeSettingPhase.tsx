@@ -117,7 +117,7 @@ export default function CodeSettingPhase({
   return (
     <div className="ah-container ah-container--narrow ah-mt">
       <div className="ah-card">
-        <h2 className="bc-section-title">Set Your Secret Code</h2>
+        <h2>Set Your Secret Code</h2>
 
         <p className="ah-meta ah-mb-lg">
           Choose a secret code for your opponent to crack. No duplicates allowed.
@@ -184,7 +184,10 @@ export default function CodeSettingPhase({
             ✓ Your code is set. {opponentCodeSet ? 'Game starting!' : 'Waiting for opponent...'}
           </div>
         ) : (
-          <div className="bc-actions ah-mt">
+          <div className="ah-flex-between ah-mt">
+            <button className="ah-btn-outline" onClick={handleClear}>
+              Clear
+            </button>
             <button
               className="ah-btn-primary"
               onClick={handleSubmit}

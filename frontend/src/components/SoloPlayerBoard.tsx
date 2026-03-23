@@ -125,9 +125,9 @@ export default function SoloPlayerBoard({
 
   return (
     <>
-      {/* Game Info Bar */}
-      <div className="bc-game-info-bar">
-        <div className="bc-game-info-content">
+      <div className="ah-container ah-container--narrow">
+        {/* Game Info Bar */}
+        <div className="ah-flex-center ah-mb">
           <div className="ah-badge">
             {mode === 'colors' ? 'Colors' : 'Numbers'}
           </div>
@@ -135,9 +135,6 @@ export default function SoloPlayerBoard({
             {guesses.length} / {maxGuesses} Guesses
           </div>
         </div>
-      </div>
-
-      <div className="ah-container ah-container--narrow ah-mt">
         {/* Game Over Banner */}
         {isGameOver && (
           <div className={`ah-banner ${status === 'won' ? 'ah-banner--success' : 'ah-banner--error'} ah-mb`}>
@@ -152,7 +149,7 @@ export default function SoloPlayerBoard({
         {/* Current Guess Input */}
         {!isGameOver && (
           <div className="ah-card ah-mb">
-            <h3 className="bc-section-title">Your Guess</h3>
+            <h3>Your Guess</h3>
 
             <div className="bc-guess-display">
               {currentGuess.map((value, index) => (
@@ -203,7 +200,10 @@ export default function SoloPlayerBoard({
             </div>
           )}
 
-          <div className="bc-actions ah-mt">
+          <div className="ah-flex-between ah-mt">
+            <button className="ah-btn-outline" onClick={handleClear}>
+              Clear
+            </button>
             <button
               className="ah-btn-primary"
               onClick={handleSubmit}
@@ -211,25 +211,22 @@ export default function SoloPlayerBoard({
             >
               {submitting ? 'Submitting...' : 'Submit Guess'}
             </button>
-            <button className="ah-btn-outline" onClick={handleClear}>
-              Clear
-            </button>
           </div>
         </div>
       )}
 
         {/* Guess History */}
         <div className="ah-card">
-          <h3 className="bc-section-title">Guess History</h3>
+          <h3>Guess History</h3>
 
           {guesses.length === 0 ? (
             <p className="ah-meta">No guesses yet</p>
           ) : (
-            <div className="bc-history-scroll">
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
               {[...guesses].reverse().map(guess => (
                 <div key={guess.id} className="ah-list-item ah-mb-sm">
-                  <div className="bc-history-item-content">
-                    <div className="bc-guess-number">
+                  <div className="ah-flex-center">
+                    <div className="ah-badge">
                       #{guess.turnNumber}
                     </div>
                     <div className="bc-history-pegs">
@@ -251,8 +248,8 @@ export default function SoloPlayerBoard({
         </div>
 
         {/* Legend */}
-        <div className="ah-card bc-legend ah-mt">
-          <p className="ah-mb-none">
+        <div className="ah-card ah-mt">
+          <p className="ah-meta ah-mb-none">
             <strong>Legend:</strong> ✓ Bulls (correct position) | ~ Cows (wrong position)
           </p>
         </div>
