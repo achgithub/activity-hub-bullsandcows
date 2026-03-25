@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { AppHeader, GameCard, useActivityHubContext } from 'activity-hub-sdk';
+import { useActivityHubContext } from 'activity-hub-sdk';
 import GameBoard from './components/GameBoard';
 
 // Parse query params from URL
@@ -19,45 +19,33 @@ function App() {
   // Check authentication
   if (!user || user.isGuest) {
     return (
-      <>
-        <AppHeader title="Bulls and Cows" icon="🐂" />
-        <GameCard size="narrow">
-          <p className="ah-meta">
-            Authentication required. Please access this game through Activity Hub.
-          </p>
-        </GameCard>
-      </>
+      <div className="ah-container ah-container--narrow ah-mt-lg ah-text-center">
+        <h2>Authentication Required</h2>
+        <p className="ah-meta">Please access this game through Activity Hub</p>
+      </div>
     );
   }
 
   // Check player role (should be auto-assigned as default role)
   if (!roles.hasApp('player')) {
     return (
-      <>
-        <AppHeader title="Bulls and Cows" icon="🐂" />
-        <GameCard size="narrow">
-          <p className="ah-meta">
-            You don't have permission to play Bulls and Cows.
-          </p>
-          <p className="ah-meta">
-            Contact an administrator to request access.
-          </p>
-        </GameCard>
-      </>
+      <div className="ah-container ah-container--narrow ah-mt-lg ah-text-center">
+        <h2>Access Denied</h2>
+        <p className="ah-meta">
+          You don't have permission to play Bulls and Cows.
+        </p>
+        <p className="ah-meta">Contact an administrator to request access.</p>
+      </div>
     );
   }
 
   // Must have gameId to play
   if (!gameId) {
     return (
-      <>
-        <AppHeader title="Bulls and Cows" icon="🐂" />
-        <GameCard size="narrow">
-          <p className="ah-meta">
-            No game found. Please start a new game from the lobby.
-          </p>
-        </GameCard>
-      </>
+      <div className="ah-container ah-container--narrow ah-mt-lg ah-text-center">
+        <h2>Game ID Required</h2>
+        <p className="ah-meta">No game found. Please start a new game from the lobby.</p>
+      </div>
     );
   }
 
