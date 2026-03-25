@@ -76,10 +76,10 @@ export function useGameSocket(
         connect();
       }, backoff);
     };
-  }, [gameId, token, onEvent]);
+  }, [gameId, onEvent]);
 
   useEffect(() => {
-    if (gameId && token) {
+    if (gameId) {
       connect();
     }
 
@@ -93,7 +93,7 @@ export function useGameSocket(
         reconnectTimeoutRef.current = null;
       }
     };
-  }, [gameId, token, connect]);
+  }, [gameId, connect]);
 
   return { connected, lastEvent, error };
 }
