@@ -13,7 +13,6 @@ export interface UseGameSocketResult {
 
 export function useGameSocket(
   gameId: string | null,
-  token: string,
   onEvent?: (event: SSEEvent) => void
 ): UseGameSocketResult {
   const [connected, setConnected] = useState(false);
@@ -24,6 +23,8 @@ export function useGameSocket(
   const reconnectAttemptsRef = useRef(0);
 
   const connect = useCallback(() => {
+    // Get token from localStorage (stored by Activity Hub SDK)
+    const token = localStorage.getItem('token');
     if (!gameId || !token) return;
 
     // Close existing connection

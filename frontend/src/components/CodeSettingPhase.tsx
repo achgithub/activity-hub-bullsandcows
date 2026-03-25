@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
+interface User {
+  email: string;
+  name: string;
+}
+
 interface CodeSettingPhaseProps {
   gameId: string;
-  token: string;
-  userId: string;
+  user: User;
   mode: string; // 'colors' or 'numbers'
   myCodeSet: boolean;
   opponentCodeSet: boolean;
@@ -23,8 +27,7 @@ const NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 export default function CodeSettingPhase({
   gameId,
-  token,
-  userId,
+  user,
   mode,
   myCodeSet,
   opponentCodeSet,
@@ -90,11 +93,16 @@ export default function CodeSettingPhase({
     setError(null);
 
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token');
+      }
+
       const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}/set-code`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'X-User-ID': userId,
+          'X-User-ID': user.email,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ code: code.join('') }),

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { AppHeader, GameCard } from 'activity-hub-sdk';
+import { AppHeader, GameCard, useActivityHubContext } from 'activity-hub-sdk';
 import GameBoard from './components/GameBoard';
 
 // Parse query params from URL
@@ -8,24 +8,39 @@ function useQueryParams() {
     const params = new URLSearchParams(window.location.search);
     return {
       gameId: params.get('gameId'),
-      userId: params.get('userId'),
-      userName: params.get('userName') || 'Player',
-      token: params.get('token'),
     };
   }, []);
 }
 
 function App() {
-  const { gameId, userId, userName, token } = useQueryParams();
+  const { gameId } = useQueryParams();
+  const { user, roles } = useActivityHubContext();
 
-  // Must have userId and token to play
-  if (!userId || !token) {
+  // Check authentication
+  if (!user || user.isGuest) {
     return (
       <>
         <AppHeader title="Bulls and Cows" icon="🐂" />
         <GameCard size="narrow">
           <p className="ah-meta">
-            Missing authentication. Please access this game through the Activity Hub.
+            Authentication required. Please access this game through Activity Hub.
+          </p>
+        </GameCard>
+      </>
+    );
+  }
+
+  // Check player role (should be auto-assigned as default role)
+  if (!roles.hasApp('player')) {
+    return (
+      <>
+        <AppHeader title="Bulls and Cows" icon="🐂" />
+        <GameCard size="narrow">
+          <p className="ah-meta">
+            You don't have permission to play Bulls and Cows.
+          </p>
+          <p className="ah-meta">
+            Contact an administrator to request access.
           </p>
         </GameCard>
       </>
@@ -46,7 +61,7 @@ function App() {
     );
   }
 
-  return <GameBoard gameId={gameId} token={token} userId={userId} userName={userName} />;
+  return <GameBoard gameId={gameId} user={user} />;
 }
 
 export default App;

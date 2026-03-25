@@ -42,25 +42,34 @@ interface Game {
   guesses: Guess[];
 }
 
-interface GameBoardProps {
-  gameId: string;
-  token: string;
-  userId: string;
-  userName: string;
+interface User {
+  email: string;
+  name: string;
 }
 
-export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
+interface GameBoardProps {
+  gameId: string;
+  user: User;
+}
+
+export default function GameBoard({ gameId, user }: GameBoardProps) {
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchGame = useCallback(async () => {
     try {
+      // Get token from localStorage (stored by Activity Hub SDK)
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token');
+      }
+
       // Use absolute URL with proxy path
       const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'X-User-ID': userId,
+          'X-User-ID': user.email,
         },
       });
 
@@ -80,7 +89,7 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
       setError('Failed to load game');
       setLoading(false);
     }
-  }, [gameId, token, userId]);
+  }, [gameId, user.email]);
 
   // Handle SSE events
   const handleSSEEvent = useCallback((event: SSEEvent) => {
@@ -104,7 +113,7 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
     }
   }, [fetchGame]);
 
-  useGameSocket(gameId, token, handleSSEEvent);
+  useGameSocket(gameId, handleSSEEvent);
 
   // Fetch initial game state
   useEffect(() => {
@@ -112,11 +121,16 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   }, [fetchGame]);
 
   const handleSoloGuess = async (guess: string) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token');
+    }
+
     const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}/guess`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
-        'X-User-ID': userId,
+        'X-User-ID': user.email,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ guess }),
@@ -132,11 +146,16 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   };
 
   const handleTwoPlayerGuess = async (guess: string) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token');
+    }
+
     const response = await fetch(`/api/apps/bulls-and-cows/proxy/api/game/${gameId}/guess`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
-        'X-User-ID': userId,
+        'X-User-ID': user.email,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ guess }),
@@ -194,15 +213,14 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
   } else if (game.variant === '2player') {
     if (game.status === 'code_setting') {
       // Code setting phase
-      const isPlayer1 = game.player1Id === userId;
+      const isPlayer1 = game.player1Id === user.email;
       const myCodeSet = isPlayer1 ? game.player1CodeSet || false : game.player2CodeSet || false;
       const opponentCodeSet = isPlayer1 ? game.player2CodeSet || false : game.player1CodeSet || false;
 
       return (
         <CodeSettingPhase
           gameId={gameId}
-          token={token}
-          userId={userId}
+          user={user}
           mode={game.mode}
           myCodeSet={myCodeSet}
           opponentCodeSet={opponentCodeSet}
@@ -211,15 +229,15 @@ export default function GameBoard({ gameId, token, userId }: GameBoardProps) {
       );
     } else {
       // Active gameplay or game over
-      const isPlayer1 = game.player1Id === userId;
+      const isPlayer1 = game.player1Id === user.email;
       const myCode = isPlayer1 ? game.player1Code || '' : game.player2Code || '';
-      const myGuesses = game.guesses.filter(g => g.playerId === userId);
-      const opponentGuesses = game.guesses.filter(g => g.playerId !== userId);
+      const myGuesses = game.guesses.filter(g => g.playerId === user.email);
+      const opponentGuesses = game.guesses.filter(g => g.playerId !== user.email);
       const opponentLastGuess = opponentGuesses.length > 0 ? opponentGuesses[opponentGuesses.length - 1] : null;
 
       return (
         <TwoPlayerBoard
-          userId={userId}
+          userId={user.email}
           mode={game.mode}
           myCode={myCode}
           opponentLastGuess={opponentLastGuess}
